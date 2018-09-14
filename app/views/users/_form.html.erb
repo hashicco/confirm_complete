@@ -1,0 +1,32 @@
+<%= form_with(model: user, local: true) do |form| %>
+  <% if user.errors_except_form_step.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors_except_form_step.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% user.errors_except_form_step.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :first_name %>
+  <%= form.hidden_field :last_name %>
+  <%= form.hidden_field :email %>
+  <%= form.hidden_field :address %>
+
+  <%= form.hidden_field :form_step %>
+  <%= render user.step_partial_form_name, form: form %>
+
+  <div class="actions">
+    <% unless @user.on_first_form_step? %>
+      <%= form.button "戻る", name: 'user[form_transition]', value: :__regress %>
+    <% end %>
+    <% if @user.on_last_form_step? %>
+      <%= form.button "登録", name: 'user[form_transition]', value: :__finish %>
+    <% else %>
+      <%= form.button "次へ", name: 'user[form_transition]', value: :__progress %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,29 @@
+<%= form_with(model: team, local: true) do |form| %>
+  <% if team.errors_except_form_step.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(team.errors_except_form_step.count, "error") %> prohibited this team from being saved:</h2>
+
+      <ul>
+      <% team.errors_except_form_step.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :name %>
+
+  <%= form.hidden_field :form_step %>
+  <%= render team.step_partial_form_name, form: form %>
+
+  <div class="actions">
+    <% unless @team.on_first_form_step? %>
+      <%= form.button "戻る", name: 'team[form_transition]', value: :__regress %>
+    <% end %>
+    <% if @team.on_last_form_step? %>
+      <%= form.button "登録", name: 'team[form_transition]', value: :__finish %>
+    <% else %>
+      <%= form.button "次へ", name: 'team[form_transition]', value: :__progress %>
+    <% end %>
+  </div>
+<% end %>
